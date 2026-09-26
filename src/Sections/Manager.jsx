@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './Navbar';
 import Home from './Home';
 import Skills from './skills';
-import Bottom from './Bottom';
+import About from './About';
 
 const Manager = () => {
   return (
@@ -10,7 +10,7 @@ const Manager = () => {
       <Navbar />
       <Home />
       <Skills />
-      <Bottom />
+      <About />
     </div>
   );
 };

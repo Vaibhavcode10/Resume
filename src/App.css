@@ -299,11 +299,11 @@ p {
 
 .skills-viewport {
   width: 100%;
-  margin: 0;
+  margin-top: -12px;
   overflow: hidden;
   container-type: inline-size;
   perspective: 1200px;
-  padding-left: 1.5rem;
+  padding: 12px 0 0 1.5rem;
 }
 
 .skills-track {
@@ -311,11 +311,6 @@ p {
   width: max-content;
   animation: skills-marquee 36s linear infinite;
   will-change: transform;
-}
-
-.skills-viewport:hover .skills-track,
-.skills-viewport:focus-within .skills-track {
-  animation-play-state: paused;
 }
 
 .skills-group {
@@ -445,7 +440,7 @@ p {
 @media (max-width: 520px) {
   .skills-viewport {
     width: 100%;
-    margin: 0;
+    margin-top: -12px;
     padding-left: 1rem;
   }
 
