@@ -1,8 +1,9 @@
+# ✅ CORRECT:
 name: Deploy to Railway
 
 on:
   push:
-    branches: [ "main" ] # Runs every time you push to main branch
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -15,5 +16,5 @@ jobs:
       - name: Deploy to Railway
         uses: bbrzozowski/railway-action@v1
         with:
-          railway_token: ${{ 1f791138-f58e-43a8-9045-dfa310a21cf2}}
-          service: ${{ 841c1fa4-2494-497a-bfbd-c3d46236a73e}}
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: ${{ secrets.RAILWAY_SERVICE_ID }}
