@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 
 const ProjectsPage = () => {
   return (
-    <div className="min-h-screen bg-transparent px-6 py-28 text-slate-100 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-transparent px-6 py-20 text-slate-100 sm:px-8 lg:px-12">
       <Navbar />
       <section id="projects-page" className="mx-auto max-w-6xl rounded-[2rem] border border-amber-400/15 bg-black/30 p-10 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl">
         <p className="mb-4 text-sm uppercase tracking-[0.35em] text-amber-300">Projects</p>

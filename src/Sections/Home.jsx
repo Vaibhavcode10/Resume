@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import profileImage from "../assets/profile.png";
+import profileImage from "../assets/profile.png"; // lowercase 'p'
 
 const Vaibhav = () => (
   <span className="text-amber-300">Vaibhav</span>
@@ -17,9 +17,8 @@ const Home = () => {
   const [startUp, setStartUp] = useState(true);
   const [digitTick, setDigitTick] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
-  // set of cell IDs (text cells) that have been "swapped" to the next
-  // message's letter during the erase sweep
   const [swappedCells, setSwappedCells] = useState(() => new Set());
+  const [showRoleText, setShowRoleText] = useState(true);
 
   const orderRef = useRef([]);
 
@@ -78,8 +77,6 @@ const Home = () => {
     setSwappedCells(new Set());
   }, [grid, startUp]);
 
-  // helper: is this cell a "text cell" for either the outgoing or
-  // incoming message, at the current grid's text row?
   const textRow = Math.min(12, grid.rows - 2);
   const isTextCell = (cell) => {
     if (grid.columns === 0) return false;
@@ -87,8 +84,8 @@ const Home = () => {
     const col = cell % grid.columns;
     if (row !== textRow) return false;
 
-    const startColA = messageIndex === 0 ? 12 : 13; // current message's cols
-    const startColB = messageIndex === 0 ? 13 : 12; // next message's cols
+    const startColA = messageIndex === 0 ? 12 : 13;
+    const startColB = messageIndex === 0 ? 13 : 12;
     const lenA = messages[messageIndex].length;
     const lenB = messages[(messageIndex + 1) % 2].length;
 
@@ -116,19 +113,16 @@ const Home = () => {
           const cell = orderRef.current[idx];
 
           if (isTextCell(cell)) {
-            // morph this cell's letter instead of blanking it
             setSwappedCells((prev) => {
               const next = new Set(prev);
               next.add(cell);
               return next;
             });
           } else {
-            // normal background cell -> erase to blank
             setActiveCells((prev) => prev.filter((c) => c !== cell));
           }
           setIdx((prev) => prev + 1);
         } else {
-          // sweep finished -> flip message, keep only text cells active
           setMessageIndex((prev) => (prev + 1) % 2);
           setStartUp((prev) => !prev);
           setActiveCells((prev) => prev.filter((c) => isTextCell(c)));
@@ -150,15 +144,23 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setShowRoleText(window.scrollY < window.innerHeight * 0.75);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const currentMessage = messages[messageIndex];
   const nextMessage = messages[(messageIndex + 1) % 2];
 
   return (
     <section
       id="home"
-      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4"
+      className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4"
     >
-      {/* Background Grid */}
+      {/* Animated background grid continues behind every page section. */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
@@ -177,7 +179,7 @@ const Home = () => {
             ? (messageIndex === 0 ? 13 : 12)
             : (messageIndex === 0 ? 12 : 13);
 
-          const isTextPosition = row === textRow &&
+          const isTextPosition = showRoleText && row === textRow &&
                                 col >= startCol &&
                                 col < startCol + activeMessage.length + 2;
 
@@ -266,4 +268,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home;  

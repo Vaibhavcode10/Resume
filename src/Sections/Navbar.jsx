@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "Home", type: "scroll", target: "#home", priority: true },
+  { label: "About", type: "scroll", target: "#about", priority: true },
   { label: "Skills", type: "scroll", target: "#skills", priority: true },
   { label: "Projects", type: "route", target: "/projects", priority: true },
   {
@@ -64,6 +65,7 @@ const Navbar = () => {
     setOpen(false);
 
     if (item.type === "scroll") {
+      document.body.style.overflow = "";
       setActiveSection(item.target.slice(1)); // instant feedback, don't wait for scroll/observer
       if (location.pathname !== "/") {
         navigate("/");
@@ -83,19 +85,23 @@ const Navbar = () => {
     (item.type === "route" && location.pathname === item.target);
 
   const linkClasses = (item) =>
-    `relative px-6 py-3 text-xl lg:text-2xl font-medium tracking-[0.2em] transition-all duration-500 ${
+    `relative px-5 py-1.5 text-lg lg:text-xl font-medium tracking-[0.2em] transition-all duration-500 ${
       isActive(item)
         ? "text-amber-300"
         : "text-slate-300 hover:text-amber-300"
     }`;
 
   return (
-    <header className="fixed left-1/2 top-6 z-50 w-[95%] max-w-7xl -translate-x-1/2">
-      <div className="flex items-center justify-between">
+    <header className="fixed left-1/2 top-2 z-50 w-[92%] max-w-6xl -translate-x-1/2">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-6 left-1/2 z-0 h-20 w-screen -translate-x-1/2 bg-black/20 backdrop-blur-md"
+      />
+      <div className="relative z-10 flex items-center justify-between px-3 py-1 sm:px-5">
         {/* Floating Logo */}
         <div
           onClick={() => navigate("/")}
-          className="cursor-pointer select-none text-4xl sm:text-5xl text-amber-300 transition-all duration-500 hover:scale-105 hover:text-amber-200"
+          className="translate-y-1 cursor-pointer select-none text-3xl sm:text-4xl text-amber-300 transition-all duration-500 hover:scale-105 hover:text-amber-200"
           style={{
             fontFamily: "'Cinzel Decorative', serif",
             letterSpacing: "4px",
@@ -136,13 +142,13 @@ const Navbar = () => {
 
         {/* Mobile Toggle */}
         <button
-          className="inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center text-amber-300 transition-all duration-300 hover:scale-110 hover:text-amber-200 md:hidden"
+          className="inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center text-amber-300 transition-all duration-300 hover:scale-110 hover:text-amber-200 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle navigation"
         >
           <svg
             viewBox="0 0 24 24"
-            className={`h-8 w-8 transition-transform duration-300 ${
+            className={`h-7 w-7 transition-transform duration-300 ${
               open ? "rotate-90" : ""
             }`}
             fill="none"
