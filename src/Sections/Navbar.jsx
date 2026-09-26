@@ -141,7 +141,7 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Toggle */}
-        <button
+        {/* <button
           className="inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center text-amber-300 transition-all duration-300 hover:scale-110 hover:text-amber-200 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle navigation"
@@ -161,7 +161,7 @@ const Navbar = () => {
               d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
-        </button>
+        </button> */}
       </div>
 
       {/* Floating Mobile Menu */}
