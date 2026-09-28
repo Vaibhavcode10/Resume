@@ -42,6 +42,10 @@ body,
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* ─── Golden grid background ─── */
 @keyframes gridGlitter {
   0%   { opacity: 0.7; }

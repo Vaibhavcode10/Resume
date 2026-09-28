@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const navLinks = [
   { label: "Home", type: "scroll", target: "#home", priority: true },
   { label: "About", type: "scroll", target: "#about", priority: true },
   { label: "Skills", type: "scroll", target: "#skills", priority: true },
-  { label: "Projects", type: "route", target: "/projects", priority: true },
+  { label: "Projects", type: "scroll", target: "#projects", priority: true },
   {
     label: "Certificates",
     type: "scroll",
@@ -15,26 +14,16 @@ const navLinks = [
   { label: "Contact", type: "scroll", target: "#contact", priority: false },
 ];
 
-// Retries until the target element exists (handles cross-page navigation)
-const scrollToTarget = (target, attempts = 0) => {
+const scrollToTarget = (target) => {
   const el = document.querySelector(target);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth" });
-  } else if (attempts < 20) {
-    setTimeout(() => scrollToTarget(target, attempts + 1), 50);
-  }
+  el?.scrollIntoView({ behavior: "smooth" });
 };
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   useEffect(() => {
-    if (location.pathname !== "/") return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -59,30 +48,16 @@ const Navbar = () => {
       });
 
     return () => observer.disconnect();
-  }, [location.pathname]);
+  }, []);
 
   const handleNavigation = (item) => {
     setOpen(false);
 
-    if (item.type === "scroll") {
-      document.body.style.overflow = "";
-      setActiveSection(item.target.slice(1)); // instant feedback, don't wait for scroll/observer
-      if (location.pathname !== "/") {
-        navigate("/");
-      }
-      scrollToTarget(item.target);
-    } else {
-      navigate(item.target);
-    }
+    setActiveSection(item.target.slice(1));
+    scrollToTarget(item.target);
   };
 
-  // Only trust scroll-based activeSection while actually on the home page
-  const isActive = (item) =>
-    (item.type === "scroll" &&
-      location.pathname === "/" &&
-      activeSection !== null &&
-      activeSection === item.target.slice(1)) ||
-    (item.type === "route" && location.pathname === item.target);
+  const isActive = (item) => activeSection === item.target.slice(1);
 
   const linkClasses = (item) =>
     `relative px-5 py-1.5 text-lg lg:text-xl font-medium tracking-[0.2em] transition-all duration-500 ${
@@ -100,7 +75,7 @@ const Navbar = () => {
       <div className="relative z-10 flex items-center justify-between px-3 py-1 sm:px-5">
         {/* Floating Logo */}
         <div
-          onClick={() => navigate("/")}
+          onClick={() => handleNavigation(navLinks[0])}
           className="translate-y-1 cursor-pointer select-none text-3xl sm:text-4xl text-amber-300 transition-all duration-500 hover:scale-105 hover:text-amber-200"
           style={{
             fontFamily: "'Cinzel Decorative', serif",
@@ -141,7 +116,7 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Toggle */}
-        {/* <button
+         <button
           className="inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center text-amber-300 transition-all duration-300 hover:scale-110 hover:text-amber-200 md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle navigation"
@@ -161,7 +136,7 @@ const Navbar = () => {
               d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
-        </button> */}
+        </button> 
       </div>
 
       {/* Floating Mobile Menu */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import profileImage from "../assets/Profile.png";
+import profileImage from "../assets/profile.png";
 
 const Vaibhav = () => (
   <span className="text-amber-300">Vaibhav</span>
@@ -18,14 +18,43 @@ const Home = () => {
   const [digitTick, setDigitTick] = useState(0);
   const [messageIndex, setMessageIndex] = useState(0);
   const [swappedCells, setSwappedCells] = useState(() => new Set());
-  const [showRoleText, setShowRoleText] = useState(true);
 
   const orderRef = useRef([]);
+  const heroRef = useRef(null);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   const messages = [
     "WEB DEVELOPER",
     "UX DESIGNER"
   ];
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const nextSection = hero?.nextElementSibling;
+    if (!hero || !nextSection) return;
+
+    let isHeroInView = false;
+    let isNextSectionInView = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === hero) {
+            isHeroInView = entry.isIntersecting && entry.intersectionRatio >= 0.25;
+          } else if (entry.target === nextSection) {
+            isNextSectionInView = entry.isIntersecting;
+          }
+        });
+
+        setIsHeroVisible(isHeroInView && !isNextSectionInView);
+      },
+      { threshold: [0, 0.25] }
+    );
+
+    observer.observe(hero);
+    observer.observe(nextSection);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -144,23 +173,16 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => setShowRoleText(window.scrollY < window.innerHeight * 0.75);
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const currentMessage = messages[messageIndex];
   const nextMessage = messages[(messageIndex + 1) % 2];
 
   return (
     <section
       id="home"
-      className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden px-4"
+      ref={heroRef}
+      className="relative flex min-h-[calc(100vh-2rem)] w-full items-center justify-center overflow-hidden px-4"
     >
-      {/* Animated background grid continues behind every page section. */}
+      {/* Viewport-wide animated background */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
@@ -179,7 +201,7 @@ const Home = () => {
             ? (messageIndex === 0 ? 13 : 12)
             : (messageIndex === 0 ? 12 : 13);
 
-          const isTextPosition = showRoleText && row === textRow &&
+          const isTextPosition = isHeroVisible && row === textRow &&
                                 col >= startCol &&
                                 col < startCol + activeMessage.length + 2;
 
@@ -235,6 +257,35 @@ const Home = () => {
           I'm a developer focused on modern, elegant and user-friendly web
           interfaces.
         </p>
+
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+          {/* View Projects — dark */}
+              {/* Contact Me — gold */}
+          <a href="#contact" style={{
+            padding: '0.7rem 1.6rem', borderRadius: 8, fontSize: '0.88rem', fontWeight: 500,
+            background: '#f2d322', color: '#17130a',
+            border: '1px solid #c9a84c', textDecoration: 'none',
+            letterSpacing: '0.04em', transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#fbbb0b'; e.currentTarget.style.borderColor = '#dfbd62'; e.currentTarget.style.boxShadow = '0 0 18px rgba(201,168,76,0.3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#f3b611'; e.currentTarget.style.borderColor = '#c9a84c'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
+            <b>Contact Me</b>
+          </a>
+          <a href="#projects" style={{
+            padding: '0.7rem 1.6rem', borderRadius: 8, fontSize: '0.88rem', fontWeight: 500,
+            background: 'rgba(255,255,255,0.06)', color: '#f0ede6',
+            border: '1px solid rgba(255,255,255,0.12)', textDecoration: 'none',
+            letterSpacing: '0.04em', transition: 'background 0.2s, border-color 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+          >
+            View Projects
+          </a>
+
+      
+        </div>
       </div>
 
       {/* Image Section */}
@@ -268,4 +319,4 @@ const Home = () => {
   );
 };
 
-export default Home;  
+export default Home;
